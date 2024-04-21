@@ -143,7 +143,42 @@ ELSIF c_order BETWEEN 4 AND 6 THEN
 ELSE
     BEGIN dbms_output.put_line('El cliente '||cus.name||' ES MUY BUENO');
     END;
-END IF;
-
+    END IF;
 END;
+
+/*
+7. Ingresar un número de departamento n y mostrar el nombre del departamento
+y la cantidad de empleados que trabajan en él.
+Si no tiene empleados sacar un mensaje “Sin empleados” 
+Si tiene entre 1 y 10 empleados desplegar “Normal”
+Si tiene más de 10 empleados, desplegar “Muchos”
+*/
+DECLARE
+n department.department_id%type := :ID_DPTO;
+v_dpto department.name%type;
+c_emp NUMBER;
+
+BEGIN
+    SELECT d.name, COUNT(e.employee_id) INTO v_dpto, c_emp 
+    FROM DEPARTMENT d JOIN EMPLOYEE e 
+    ON (d.department_id = e.department_id)
+    WHERE d.department_id = n GROUP BY d.name; 
+
+    dbms_output.put_line('El departamento: '||v_dpto||' tiene: '||c_emp||' empleados.');
+
+    IF c_emp = 0 THEN
+        BEGIN
+        dbms_output.put_line('SIN EMPLEADOS');
+        END;   
+    ELsIF c_emp BETWEEN 1 AND 10 THEN
+        BEGIN
+        dbms_output.put_line('NORMAL');
+        END;
+    ELSE
+        BEGIN
+        dbms_output.put_line('MUCHOS');
+        END;
+    END IF;
+END;
+
 
