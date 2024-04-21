@@ -90,4 +90,26 @@ Que pasa si la orden no existe?
 Si la orden no existe lo manejo con la excepcion NO_DATA_FOUND.
 */
 DECLARE
-v_order 
+v_order SALES_ORDER%Rowtype;
+v_nro NUMBER := :Nro_Order;
+
+Type tipo_r IS RECORD(id NUMBER, fecha DATE, idcliente NUMBER, envio DATE, total NUMBER(8,1));
+new_order tipo_r;
+
+BEGIN
+
+    SELECT * INTO v_order FROM SALES_ORDER WHERE order_id = v_nro;
+    new_order.id := v_order.order_id;
+    new_order.fecha := v_order.order_date;
+    new_order.idcliente := v_order.customer_id;
+    new_order.envio := v_order.ship_date;
+    new_order.total := v_order.total;
+
+    dbms_output.put_line(new_order.id||' '||new_order.fecha||' '||new_order.idcliente||
+                    ' '||new_order.envio||' '||new_order.total);
+
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN 
+    dbms_output.put_line('No existe la orden con el ID: '||v_nro);
+
+END;
