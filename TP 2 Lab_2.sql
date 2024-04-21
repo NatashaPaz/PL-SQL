@@ -113,3 +113,37 @@ BEGIN
     dbms_output.put_line('No existe la orden con el ID: '||v_nro);
 
 END;
+
+/*
+6.Escribir un bloque para mostrar la cantidad de órdenes que emitió un cliente dado siguiendo las siguientes consignas:
+Ingresar el id del cliente una variable de sustitución
+Si el cliente emitió menos de 3 órdenes desplegar:
+“El cliente nombre ES REGULAR”.
+Si emitió entre 4 y 6“
+El cliente nombre ES BUENO”.
+Si emitió más:
+“El cliente nombre ES MUY BUENO”
+*/
+
+DECLARE
+cus customer%Rowtype;
+c_id NUMBER := :Cliente_ID;
+c_order NUMBER;
+
+BEGIN
+    SELECT COUNT(order_id) INTO c_order
+    FROM SALES_ORDER WHERE customer_id = c_id;
+
+IF c_order <= 3 THEN
+    BEGIN dbms_output.put_line('El cliente '||cus.name||' ES REGULAR'); 
+    END;
+ELSIF c_order BETWEEN 4 AND 6 THEN
+    BEGIN dbms_output.put_line('El cliente '||cus.name||' ES BUENO');
+    END;
+ELSE
+    BEGIN dbms_output.put_line('El cliente '||cus.name||' ES MUY BUENO');
+    END;
+END IF;
+
+END;
+
