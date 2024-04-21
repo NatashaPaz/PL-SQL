@@ -181,4 +181,39 @@ BEGIN
     END IF;
 END;
 
+/*
+8. Crear un bloque que pida un número de empleado y muestre su apellido 
+y nombre y tantos ‘*’ como resulte de dividir su salario por 100.
+Ej: empleado 7900 gana 950, entonces muestro *** *** *** 
+*/
 
+DECLARE
+v_emp employee%Rowtype;
+c_emp employee.employee_id%type := :Emp_id;
+i NUMBER := 1;
+
+BEGIN
+    SELECT * INTO v_emp FROM EMPLOYEE WHERE employee_id = c_emp;
+    dbms_output.put_line(v_emp.first_name||' '|| v_emp.last_name);
+    v_emp.salary := v_emp.salary/100;
+    --dbms_output.put_line(v_emp.salary);
+    WHILE i <= v_emp.salary LOOP
+        dbms_output.put_line('*');
+        i := i+1;
+    END LOOP;
+END;
+--Or---------------------------------------------------------------
+DECLARE
+v_emp employee%Rowtype;
+c_emp employee.employee_id%type := :Emp_id;
+
+BEGIN
+    SELECT * INTO v_emp 
+    FROM EMPLOYEE WHERE employee_id = c_emp;
+   
+    v_emp.salary := v_emp.salary/100;
+
+    dbms_output.put_line(v_emp.first_name||' '||v_emp.last_name||' '
+                        ||RPAD('*',v_emp.salary,'*'));
+    
+END;
