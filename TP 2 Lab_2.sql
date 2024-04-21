@@ -217,3 +217,32 @@ BEGIN
                         ||RPAD('*',v_emp.salary,'*'));
     
 END;
+
+/*
+9. Hacer un bloque que guarde en las posiciones pares de una tabla en memoria (tabla Pl/Sql) 
+de números enteros el múltiplo de 2 de la posición. 
+Ejemplo: T(4) := 8. Ingresar la cantidad de elementos que debe tener la tabla. 
+Por último desplegar la cantidad de elementos que tiene la tabla y todo su contenido.
+*/
+
+DECLARE
+    TYPE t_table IS TABLE OF NUMBER INDEX BY BINARY_INTEGER;
+    v_tab t_table;
+    -- Solicitar al usuario la cantidad de elementos
+    n_ele NUMBER := :Elements;
+BEGIN 
+     -- Llenar la tabla con los múltiplos de 2 en las posiciones pares
+    FOR i IN 1..n_ele LOOP
+        IF MOD(i, 2) = 0 THEN --Retorna el residuo. Es decir i % 2 = 0 ES PAR.
+            v_tab(i) := i * 2;
+        END IF;
+    END LOOP;
+    -- Mostrar la cantidad de elementos en la tabla
+    dbms_output.put_line('La cantidad de elementos de la tabla es: '||n_ele);
+    -- Mostrar el contenido de la tabla
+    FOR i IN 1..n_ele LOOP
+        IF v_tab.EXISTS(i) THEN --Verifica si se ingreso el valor en posiciones pares
+            dbms_output.put_line('T('|| i ||') := ' || v_tab(i));
+        END IF;
+    END LOOP;
+END;
