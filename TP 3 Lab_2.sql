@@ -61,3 +61,39 @@ BEGIN
         dbms_output.put_line('No existe el empleado con ID: '||n_emp);
     END IF;
 END;
+
+/*
+2. Modificar el ejercicio anterior para actualizar la comisión de todos los empleados de acuerdo
+a su sueldo usando los mismos criterios. Desplegar mensajes indicando cuantos registros fueron
+actualizados según cada criterio
+*/
+
+DECLARE
+    v_a NUMBER;
+    v_b NUMBER;
+    v_c NUMBER;
+BEGIN
+    UPDATE EMPLOYEE
+    SET commission = CASE
+                        WHEN salary <= 1300 THEN commission + (commission * 0.10)
+                        WHEN salary BETWEEN 1300 AND 1500 THEN commission + (commission * 0.15)
+                        ELSE commission + (commission * 0.20)
+                    END
+    WHERE commission IS NOT NULL;
+
+    SELECT COUNT(*) INTO v_a
+    FROM employee
+    WHERE salary <= 1300;
+    
+    SELECT COUNT(*) INTO v_b
+    FROM employee
+    WHERE salary BETWEEN 1300 AND 1500;
+    
+    SELECT COUNT(*) INTO v_c
+    FROM employee
+    WHERE salary > 1500;
+
+    dbms_output.put_line('Se modificaron '||v_a||' filas de sueldos menores a 1300.');
+    dbms_output.put_line('Se modificaron '||v_b||' filas de sueldos entre 1300 y 1500.');
+    dbms_output.put_line('Se modificaron '||v_c||' filas de sueldos mayores a 1500.');
+END;
