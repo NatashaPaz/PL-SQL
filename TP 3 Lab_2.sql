@@ -97,3 +97,36 @@ BEGIN
     dbms_output.put_line('Se modificaron '||v_b||' filas de sueldos entre 1300 y 1500.');
     dbms_output.put_line('Se modificaron '||v_c||' filas de sueldos mayores a 1500.');
 END;
+
+/*
+3. Crear un bloque Pl/Sql que permita dar de baja cargos que ya no se usan (usar latabla JOB):
+Eliminar de la tabla JOB aquella fila cuyo Job_Id es ingresado con una variable de sustitución del SqlDeveloper.
+Capturar e informar mediante excepciones o atributos del cursor , las siguientes eventualidades: no existe el 
+código de cargo ingresado (Sql%Notfound o Sql%Rowcount) no puede eliminar un cargo que está asignado a empleados
+(Asociar una excepción con el error correspondiente).
+*/
+SELECT j.function, COUNT(e.employee_id) FROM JOB j JOIN EMPLOYEE e ON (j.job_id = e.job_id) GROUP BY j.function;
+
+DECLARE
+v_j job.job_id%type := :ID_JOB;
+j job.function%type;
+
+   not_row_count EXCEPTION; --le asignamos una etiqueta breve.
+    --Asociamos el numero de error -20000 con la exception definida anteriormente.
+   PRAGMA EXCEPTION_INIT(not_row_count, -20000);
+
+BEGIN
+    SELECT function INTO j FROM JOB WHERE job_id = v_j;
+
+        IF SQL%ROWCOUNT > 0 THEN
+            DELETE FROM JOB WHERE function = j;
+        END IF;
+
+    EXCEPTION
+
+        WHEN NO_DATA_FOUND THEN
+            dbms_output.put_line('El JOB_ID'||v_j||' ingresado no existe.');
+        WHEN not_row_count THEN
+            dbms_output.put_line('El rowcount es igual a: '||SQL%ROWCOUNT||'. Es decir que no encontro el ID ingresado.');
+
+END;
