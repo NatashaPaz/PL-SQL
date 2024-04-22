@@ -130,3 +130,38 @@ BEGIN
             dbms_output.put_line('El rowcount es igual a: '||SQL%ROWCOUNT||'. Es decir que no encontro el ID ingresado.');
 
 END;
+
+----------------------------------------------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------
+--2DA PARTE--
+
+/*
+8. Usando un cursor recorrer las tablas Sales_order e Ítem para generar un listado sobre todas las 
+órdenes y los productos que se ordenaron en ellas. Mostrar los siguientes datos: Order_id, order_date,
+product_id.
+*/
+
+DECLARE
+    CURSOR c_sales_item_cursor IS
+        SELECT s.order_id, s.order_date, i.product_id
+        FROM SALES_ORDER s JOIN ITEM i ON (s.order_id = i.order_id);
+    --Declaro una variable que herede los atributos del cursor:
+    v_sa_or c_sales_item_cursor%Rowtype;
+BEGIN
+    FOR i IN c_sales_item_cursor LOOP
+        dbms_output.put_line('Orden: '||i.order_id||' | Fecha de orden: '||i.order_date||' | ID Producto: '||i.product_id);
+    END LOOP;
+END;
+--Or------------------------------------------------------------------------------------------------------------------------
+DECLARE
+    CURSOR c_sales_item_cursor IS
+        SELECT s.order_id, s.order_date, i.product_id
+        FROM SALES_ORDER s JOIN ITEM i ON (s.order_id = i.order_id);
+    --Declaro una variable que herede los atributos del cursor:
+    v_sa_or c_sales_item_cursor%Rowtype;
+BEGIN
+    FOR v_sa_or IN c_sales_item_cursor LOOP
+        dbms_output.put_line('Orden: '||v_sa_or.order_id||' | Fecha de orden: '||v_sa_or.order_date||' | ID Producto: '||v_sa_or.product_id);
+    END LOOP;
+END;
+
